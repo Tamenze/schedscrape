@@ -1,30 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-// const wtj = require('website-to-json')
 
-
-// wtj.extractData('http://www.peridance.com/openclasses.cfm', {
-// 	fields: ['data'],
-// 	parse: function($){
-// 		return {
-// 			test: $('#container > header > pagetitle.secondary').text(),
-// 			date: $('#container > header > pagesubtitle').text(),
-// 			times: $('div > table > tbody > tr > td > table > tbody > tr > td').text()
-// 			// times: $('#container > section#main > section.main > div > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(1)').map(function(val){
-// 			// 	return $(this).text()
-// 			// }).get()
-// 			// times: $('section.main>div>table>tbody>tr>td:nth-child(1)>table>tbody>tr>td:nth-child(1)').map(function(val){
-// 			// 	return $(this).text()
-// 			// }).get()
-// 		}
-// 	}
-// })
-// .then(function(res){
-// 	console.log(JSON.stringify(res, null, 2))
-// })
-// .catch( (err) => {
-// 	console.log(err);
-// })
 
 
 const options = {
@@ -52,28 +28,41 @@ rp(options)
 
 		//hits table, if td is only child of its parent tr, that is a classType and every row (starting one removed) is a class, and should be made into its own class object
 
+		//adds class 'toluTest' to genre name cells
 		$('section.main>div>table>tbody>tr>td:nth-child(1)>table>tbody>tr>td:only-child').each(function(index){
 				$(this).parent('tr').addClass("toluTest")
 			});
 
-
+		//creates objects out of genre and classes
 		$('section.main>div>table>tbody>tr>td:nth-child(1)>table>tbody>tr>td:only-child').each(function(index){
-
 
 			var newObj = { 
 				genre:$(this).text().replace(/\W/g, ' ').trim(),
+				studio: "Peridance",
 				classes: []
 			}
 			
 			$(this).parent('tr').nextUntil($('.toluTest')).each(function(index, element){
-				$(this).children('td').each(function(){
-					newObj.classes.push($(this).text().replace(/\W/g, ' ').trim())
+				if (index === 0){
+					return true
+				}
+				var newObj2 = {}
+				$(this).children('td').each(function(index, elem){
+					// console.log(index)
+					if (index === 0){
+						newObj2.time = $(this).text().replace(/\W/g, ' ').trim()
+					}
+					if (index === 1){
+						newObj2.level = $(this).text().replace(/\W/g, ' ').trim()
+					}
+					if (index === 2){
+						newObj2.teacher = $(this).text().replace(/\W/g, ' ').trim()
+					}
 				})
+				newObj.classes.push(newObj2);
 
-
-				// newObj.classes.push($(this).text().replace(/\W/g, ' ').trim())
-			})//problem is this is resulting in nextAll, getting all follds instead of stopping at the next genre. i'm not selecting the nextUntil selector correctly somehow.
-			///
+				//need to make a new class object for each tr (starting at index 1), using the parent genre, and add entry1 to time, entry 2 to level, entry 3 to teacher.
+			})
 
 			console.log(newObj)
 			console.log("--------------")
