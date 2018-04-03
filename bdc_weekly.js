@@ -49,3 +49,10 @@ rp(options)
 	}).catch( (err) => {
 		console.log(err);
 	})
+
+
+// next as of 4/2: 
+// -BDC can be by scraped by genre too/instead, if I decide
+// -Remaining studios: EXPG, Brickhouse, Ailey Ext
+// -More Important: testing neat, tabled display of these saved objects 
+
