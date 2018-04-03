@@ -16,19 +16,22 @@ rp(options)
 	.then( ($)=> {
 
 
-		//each class is an object? with type, time, level, teacher, and studio location
+		//each class is an object with type, time, level, teacher, and studio location
 		// var classObj = {
-		// 	date: $('table > tbody > tr > td > span').text(),
-		// 	classType: ,
-		// 	time:  ,
-		// 	level: ,
-		// 	teacher: ,
-		// 	studio: 
+			// genre: "",
+			// studio: "Peridance",
+			// classes: [
+			// 	{
+			// 		time: "",
+			// 		level: "",
+			// 		teacher: ""
+			// 	}
+			// ]
 		// }
 
 		//hits table, if td is only child of its parent tr, that is a classType and every row (starting one removed) is a class, and should be made into its own class object
 
-		//adds class 'toluTest' to genre name cells
+		//adds helper class 'toluTest' to genre name cells
 		$('section.main>div>table>tbody>tr>td:nth-child(1)>table>tbody>tr>td:only-child').each(function(index){
 				$(this).parent('tr').addClass("toluTest")
 			});
@@ -36,7 +39,8 @@ rp(options)
 		//creates objects out of genre and classes
 		$('section.main>div>table>tbody>tr>td:nth-child(1)>table>tbody>tr>td:only-child').each(function(index){
 
-			var newObj = { 
+			var classObj = {
+				date: $('table > tbody > tr > td > span').text().split("for: ")[1], 
 				genre:$(this).text().replace(/\W/g, ' ').trim(),
 				studio: "Peridance",
 				classes: []
@@ -47,6 +51,8 @@ rp(options)
 					return true
 				}
 				var newObj2 = {}
+
+				//takes each tr, adds td@index0 to time, index1 to level, index2 to teacher.
 				$(this).children('td').each(function(index, elem){
 					// console.log(index)
 					if (index === 0){
@@ -59,22 +65,15 @@ rp(options)
 						newObj2.teacher = $(this).text().replace(/\W/g, ' ').trim()
 					}
 				})
-				newObj.classes.push(newObj2);
+				classObj.classes.push(newObj2);
 
-				//need to make a new class object for each tr (starting at index 1), using the parent genre, and add entry1 to time, entry 2 to level, entry 3 to teacher.
 			})
 
-			console.log(newObj)
+			console.log(classObj)
 			console.log("--------------")
-			// return
 
 		})
 
-
-		//option: add all table data to an object under the headers of time, level, 
-
-		//can make a new array for levels and teacher(incl links)
-		//can set up a database that saves the relevant data for each day of the coming week 
 	})
 	.catch( (err) => {
 		console.log(err);
